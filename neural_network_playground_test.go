@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	. "simple-neural-network/connections"
-	. "simple-neural-network/image_file_reader"
+	. "simple-neural-network/file_readers/images"
 	. "simple-neural-network/layer"
 	"simple-neural-network/utils"
 	"testing"

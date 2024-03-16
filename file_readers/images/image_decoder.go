@@ -1,4 +1,4 @@
-package image_file_reader
+package images
 
 import (
 	"bytes"
