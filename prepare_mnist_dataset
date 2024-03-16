@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# This script is used to install the required packages for the
+pip install -r datasets/requirements.txt
+python3 datasets/mnist_dataset.py
