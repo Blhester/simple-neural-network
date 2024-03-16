@@ -9,6 +9,7 @@ on:
     branches: [ "master" ]
     paths:
       - 'datasets/**'
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
