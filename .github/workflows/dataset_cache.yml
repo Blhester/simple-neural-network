@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.10'
           cache: 'pip'
-      - run: pip install -r datasets/requirements.txt
+      - run: pip install -r datasets/requirements.txt && pip install Pillow
       - run: ENV=test python3 datasets/mnist_dataset.py
       - name: Upload Dataset Artifact
         uses: actions/upload-artifact@v4
