@@ -14,17 +14,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3    
-    - name: Setup Dataset
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9'
-        cache: 'pip' # caching pip dependencies
-        run: pip install -r datasets/requirements.txt && python3 datasets/mnist_dataset.py
-        
-    - name: Upload Dataset Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: mnist_artifact
-        path: tmp/*
-        retention-days: 30
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          cache: 'pip' # caching pip dependencies
+     
+      - run: pip install -r datasets/requirements.txt  
+      
+      - run: python datasets/mnist_dataset.py
+      
+      - name: Upload Dataset Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mnist_artifact
+          path: tmp/*
+          retention-days: 30
