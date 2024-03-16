@@ -22,7 +22,7 @@ jobs:
      
       - run: pip install -r datasets/requirements.txt  
       
-      - run: python datasets/mnist_dataset.py
+      - run: python3 datasets/mnist_dataset.py
       
       - name: Upload Dataset Artifact
         uses: actions/upload-artifact@v4
