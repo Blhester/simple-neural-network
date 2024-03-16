@@ -3,10 +3,12 @@ name: Datasets
 on:
   push:
     branches: [ "master" ]
-    tags: dataset_update
+    paths:
+      - 'datasets/**'
   pull_request:
     branches: [ "master" ]
-    tags: dataset_update
+    paths:
+      - 'datasets/**'
 jobs:
   build:
     runs-on: ubuntu-latest
