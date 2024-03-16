@@ -39,6 +39,7 @@ jobs:
     - name: Download a test files artifact
       uses: actions/download-artifact@v4
       with:
+        needs: buildDataset
         name: mnist_artifact
         path: tmp/
         
