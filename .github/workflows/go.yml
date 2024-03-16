@@ -27,6 +27,7 @@ jobs:
           path: tmp/*
           retention-days: 30
   runTests:
+    needs: buildDataset
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -39,7 +40,6 @@ jobs:
     - name: Download a test files artifact
       uses: actions/download-artifact@v4
       with:
-        needs: buildDataset
         name: mnist_artifact
         path: tmp/
         
