@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"os"
 	. "simple-neural-network/connections"
 	. "simple-neural-network/file_readers/images"
 	. "simple-neural-network/layer"
 	"simple-neural-network/utils"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -13,10 +14,18 @@ import (
 func TestPlayground(t *testing.T) {
 	totalTimeStart := time.Now()
 	totalNumberOfImages := 0
+	dirsInImages, err := os.ReadDir("tmp/images/")
+	if err != nil {
+		t.Errorf("No images found: %v", err)
+	}
 	accuracyRate := make([]float64, 0)
-	for i := 0; i < 10; i++ {
-		expectedNum := i
-		fileDir := "tmp/images/" + fmt.Sprint(expectedNum) + "/"
+	for _, dir := range dirsInImages {
+		expectedNum, err := strconv.Atoi(dir.Name())
+		if err != nil {
+			t.Errorf("Error: %v", err)
+			return
+		}
+		fileDir := "tmp/images/" + dir.Name() + "/"
 		imageBytesArray, err := GetAllImagesAsBytes(fileDir)
 		if err != nil {
 			t.Errorf("Error: %v", err)
@@ -36,7 +45,7 @@ func TestPlayground(t *testing.T) {
 				PreviousPassErrorRate: errorRate,
 				LearningRate:          0.01,
 			}
-			results, err := denseLayers.ForwardPass(64, 10, NewRange(-0.5, 0.5))
+			results, err := denseLayers.ForwardPass(20, 10, NewRange(-0.5, 0.5))
 			if err != nil {
 				t.Errorf("Error: %v", err)
 				return
