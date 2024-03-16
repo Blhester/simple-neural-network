@@ -20,7 +20,7 @@ jobs:
       with:
         python-version: '3.9'
         cache: 'pip' # caching pip dependencies
-        run: ./prepare_mnist_dataset
+        run: pip install -r datasets/requirements.txt && python3 datasets/mnist_dataset.py
         
     - name: Upload Dataset Artifact
       uses: actions/upload-artifact@v4
