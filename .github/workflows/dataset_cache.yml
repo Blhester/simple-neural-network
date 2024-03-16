@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pipenv' # caching pip dependencies
+          cache: 'pip' # caching pip dependencies
       - run: pip install -r datasets/requirements.txt  
       - run: python3 datasets/mnist_dataset.py
       - name: Upload Dataset Artifact
