@@ -35,6 +35,12 @@
 > ```bash
 > go test -run Unit ./...
 > ```
+> To test against the MNIST dataset, use the following command:
+>
+> _**Note**: This will only work if you have installed the MNIST dataset using the `./prepare_mnist_dataset` script._
+> ```bash
+> go test -run TestPlayground ./...
+> ```
 
 ### Contributing
 > Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
