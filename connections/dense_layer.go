@@ -7,7 +7,6 @@ import (
 )
 
 type DenseLayers struct {
-	// The layer's neurons
 	Seed                  uint64
 	PreviousPassErrorRate []float64
 	LearningRate          float64
@@ -32,6 +31,9 @@ func (d *DenseLayers) ForwardPass(hiddenNeuronCount, outputNeuronCount int, weig
 	outputLayer := NewLayer(&hiddenLayerOutput, activation.Sigmoid)
 	outputLayer.Init(outputNeuronCount, 1, weightRange)
 	outputLayerOutput, err := runLayer(outputLayer)
+	if err != nil {
+		return nil, err
+	}
 	outputLayerOutput = d.BackwardsPropagate(outputLayerOutput)
 	if err != nil {
 		return nil, err
@@ -49,13 +51,18 @@ func (d *DenseLayers) BackwardsPropagate(outputs [][]float64) [][]float64 {
 }
 
 func CalculateCostError(expectedOutput, actualOutput []float64) CostError {
-	delta := 1 / 10 *
-		utils.SumArray(
-			utils.SquareArray(
-				utils.SubtractArrays(actualOutput, expectedOutput)))
-	differenceOfExpectedAndActual := utils.SubtractArrays(actualOutput, expectedOutput)
+	differenceOfExpectedAndActual, err := utils.SubtractArrays(actualOutput, expectedOutput)
+	if err != nil {
+		panic(err)
+	}
+	squaredDifferenceOfExpectedAndActual := utils.SquareArray(differenceOfExpectedAndActual)
+	summedSquaredDifferenceOfExpectedAndActual := utils.SumArray(squaredDifferenceOfExpectedAndActual)
+	delta := 1 / 10 * summedSquaredDifferenceOfExpectedAndActual
+
 	accuracyPercentage := utils.SumArray(differenceOfExpectedAndActual) / float64(len(differenceOfExpectedAndActual))
-	didPredictCorrectly := utils.MaxArrayPosition(actualOutput) == utils.MaxArrayPosition(expectedOutput)
+	maxActualValuePosition, _ := utils.MaxArrayPosition(actualOutput)
+	maxExpectedValuePosition, _ := utils.MaxArrayPosition(expectedOutput)
+	didPredictCorrectly := maxActualValuePosition == maxExpectedValuePosition
 
 	return CostError{
 		delta,

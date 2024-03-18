@@ -56,7 +56,8 @@ func TestPlayground(t *testing.T) {
 			if costError.DidPredictCorrectly {
 				scoreMap[expectedNum]++
 			} else {
-				scoreMap[utils.MaxArrayPosition(results[0])]++
+				position, _ := utils.MaxArrayPosition(results[0])
+				scoreMap[position]++
 			}
 		}
 		accuracyPercent := float64(scoreMap[expectedNum]) / float64(numberOfImages)

@@ -47,6 +47,9 @@ func (l *Layer) MultiplyAndAddBias() ([][]float64, error) {
 	inputs := *l.Inputs
 	weights := *l.Weights
 	bias := *l.Bias
+	if l.Activation == nil {
+		l.Activation = activation.None
+	}
 
 	outputs, err := utils.MatrixDotProduct(inputs, weights)
 	if err != nil {

@@ -6,6 +6,22 @@ import (
 	"time"
 )
 
+func MatrixDotProduct(matrixA [][]float64, matrixB [][]float64) ([][]float64, error) {
+	if len(matrixA[0]) != len(matrixB) {
+		return nil, fmt.Errorf("the number of columns in matrixA must match the number of rows in matrixB: %d != %d", len(matrixA[0]), len(matrixB))
+	}
+
+	result := make([][]float64, len(matrixA))
+	for i := 0; i < len(matrixA); i++ {
+		result[i] = make([]float64, len(matrixB[0]))
+		for j := 0; j < len(matrixB[0]); j++ {
+			for k := 0; k < len(matrixA[0]); k++ {
+				result[i][j] += matrixA[i][k] * matrixB[k][j]
+			}
+		}
+	}
+	return result, nil
+}
 func MultiplyMatrixByScalar(matrix [][]float64, scalar float64) [][]float64 {
 	result := make([][]float64, len(matrix))
 	for i := range matrix {
@@ -26,59 +42,6 @@ func CreateMatrixFromVectors(vectorA []float64, vectorB []float64) [][]float64 {
 		}
 	}
 	return result
-}
-
-func MatrixDotProduct(matrixA [][]float64, matrixB [][]float64) ([][]float64, error) {
-	if len(matrixA[0]) != len(matrixB) {
-		return nil, fmt.Errorf("the number of columns in matrixA must match the number of rows in matrixB: %d != %d", len(matrixA[0]), len(matrixB))
-	}
-
-	result := make([][]float64, len(matrixA))
-	for i := 0; i < len(matrixA); i++ {
-		result[i] = make([]float64, len(matrixB[0]))
-		for j := 0; j < len(matrixB[0]); j++ {
-			for k := 0; k < len(matrixA[0]); k++ {
-				result[i][j] += matrixA[i][k] * matrixB[k][j]
-			}
-		}
-	}
-
-	return result, nil
-}
-
-func DotProduct(vectorA []float64, vectorB []float64) (float64, error) {
-	if len(vectorA) != len(vectorB) {
-		panic("Vectors must have the same length")
-	}
-	var result float64
-	for i := 0; i < len(vectorA); i++ {
-		result += vectorA[i] * vectorB[i]
-	}
-	return result, nil
-}
-
-func ReduceOutputByHalf(outputs [][]float64) [][]float64 {
-	reducedOutputs := make([][]float64, len(outputs))
-	for i, output := range outputs {
-		for j := 0; j < len(output); j += 2 { // Skip by 2 to reduce by half, adjust as necessary
-			reducedOutputs[i] = append(reducedOutputs[i], output[j])
-		}
-	}
-	return reducedOutputs
-}
-
-func RemoveZeroSumArrays(outputs [][]float64) [][]float64 {
-	var filteredOutputs [][]float64
-	for _, output := range outputs {
-		sum := 0.0
-		for _, value := range output {
-			sum += value
-		}
-		if sum != 0 {
-			filteredOutputs = append(filteredOutputs, output)
-		}
-	}
-	return filteredOutputs
 }
 
 func Flatten(matrix [][]float64) []float64 {
@@ -106,10 +69,32 @@ func RandomUniform(startVal, endVal float64, rows, cols int) [][]float64 {
 	return result
 }
 
-func SubtractArrays(arrayA, arrayB []float64) []float64 {
+func SubtractArrays(arrayA, arrayB []float64) ([]float64, error) {
+	if err := checkArrayLength(arrayA, arrayB); err != nil {
+		return nil, err
+	}
 	result := make([]float64, len(arrayA))
 	for i := range arrayA {
 		result[i] = arrayA[i] - arrayB[i]
+	}
+	return result, nil
+}
+
+func SumArrays(arrayA, arrayB []float64) ([]float64, error) {
+	if err := checkArrayLength(arrayA, arrayB); err != nil {
+		return nil, err
+	}
+	result := make([]float64, len(arrayA))
+	for i := range arrayA {
+		result[i] = arrayA[i] + arrayB[i]
+	}
+	return result, nil
+}
+
+func SumArray(array []float64) float64 {
+	var result float64
+	for i := range array {
+		result += array[i]
 	}
 	return result
 }
@@ -122,25 +107,7 @@ func SquareArray(array []float64) []float64 {
 	return result
 }
 
-func SumArray(array []float64) float64 {
-	var result float64
-	for i := range array {
-		result += array[i]
-	}
-	return result
-}
-
-func MaxArrayValue(array []float64) float64 {
-	var result float64
-	for i := range array {
-		if array[i] > result {
-			result = array[i]
-		}
-	}
-	return result
-}
-
-func MaxArrayPosition(array []float64) int {
+func MaxArrayPosition(array []float64) (int, float64) {
 	var result float64
 	var position int
 	for i := range array {
@@ -149,5 +116,12 @@ func MaxArrayPosition(array []float64) int {
 			position = i
 		}
 	}
-	return position
+	return position, result
+}
+
+func checkArrayLength(arrayA, arrayB []float64) error {
+	if len(arrayA) != len(arrayB) {
+		return fmt.Errorf("arrays must be the same length: %d != %d", len(arrayA), len(arrayB))
+	}
+	return nil
 }
