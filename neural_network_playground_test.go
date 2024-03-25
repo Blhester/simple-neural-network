@@ -36,14 +36,14 @@ func TestPlayground(t *testing.T) {
 		scoreMap := make(map[int]int)
 
 		startTime := time.Now()
-		errorRate := make([]float64, 10)
+		var delta float64
 		for i := range imageBytesArray {
 			inputs := [][]float64{imageBytesArray[i]}
 
 			denseLayers := DenseLayers{
-				Inputs:                inputs,
-				PreviousPassErrorRate: errorRate,
-				LearningRate:          0.01,
+				Inputs:       inputs,
+				Delta:        delta,
+				LearningRate: 0.01,
 			}
 			results, err := denseLayers.ForwardPass(20, 10, NewRange(-0.5, 0.5))
 			if err != nil {
@@ -52,7 +52,7 @@ func TestPlayground(t *testing.T) {
 			}
 
 			costError := CalculateCostError(getExpectedOutput(expectedNum), results[0])
-			errorRate = costError.DifferenceOfExpectedAndActual
+			delta = costError.Delta
 			if costError.DidPredictCorrectly {
 				scoreMap[expectedNum]++
 			} else {
@@ -67,7 +67,7 @@ func TestPlayground(t *testing.T) {
 		t.Logf("Score Map: %v\n", scoreMap)
 		t.Logf("Accuracy percent: %v\n", accuracyPercent)
 		t.Logf("Processed %v images in - Elapsed Time: %v\n", numberOfImages, elapsedTime)
-		t.Logf("Final Error Rate Weights: %v\n", errorRate)
+		t.Logf("Final Delta: %v\n", delta)
 		totalNumberOfImages += numberOfImages
 	}
 	totalTimeElapsed := time.Since(totalTimeStart)

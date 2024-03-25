@@ -7,10 +7,10 @@ import (
 )
 
 type DenseLayers struct {
-	Seed                  uint64
-	PreviousPassErrorRate []float64
-	LearningRate          float64
-	Inputs                [][]float64
+	Seed         uint64
+	Delta        float64
+	LearningRate float64
+	Inputs       [][]float64
 }
 
 type CostError struct {
@@ -43,8 +43,7 @@ func (d *DenseLayers) ForwardPass(hiddenNeuronCount, outputNeuronCount int, weig
 }
 
 func (d *DenseLayers) BackwardsPropagate(outputs [][]float64) [][]float64 {
-	if d.PreviousPassErrorRate != nil {
-		currentErrorPercent := utils.CreateMatrixFromVectors(outputs[0], d.PreviousPassErrorRate)
+	if d.Delta != nil {
 		return utils.MultiplyMatrixByScalar(currentErrorPercent, -d.LearningRate)
 	}
 	return outputs
@@ -57,7 +56,7 @@ func CalculateCostError(expectedOutput, actualOutput []float64) CostError {
 	}
 	squaredDifferenceOfExpectedAndActual := utils.SquareArray(differenceOfExpectedAndActual)
 	summedSquaredDifferenceOfExpectedAndActual := utils.SumArray(squaredDifferenceOfExpectedAndActual)
-	delta := 1 / 10 * summedSquaredDifferenceOfExpectedAndActual
+	delta := 1 / 2 * summedSquaredDifferenceOfExpectedAndActual
 
 	accuracyPercentage := utils.SumArray(differenceOfExpectedAndActual) / float64(len(differenceOfExpectedAndActual))
 	maxActualValuePosition, _ := utils.MaxArrayPosition(actualOutput)

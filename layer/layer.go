@@ -34,7 +34,6 @@ func (l *Layer) Init(numberOfNeurons int, bias float64, weightRange WeightRange)
 	}
 
 	*l.Weights = utils.RandomUniform(weightRange.Start, weightRange.End, inputsElementsSize, numberOfNeurons)
-
 	*l.Bias = make([]float64, inputsElementsSize)
 	for i := range *l.Bias {
 		(*l.Bias)[i] = bias
